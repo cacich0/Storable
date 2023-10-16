@@ -1,5 +1,4 @@
 # Storable
-## _Clean Architecture_
 
 The project is still in progress :)
 
