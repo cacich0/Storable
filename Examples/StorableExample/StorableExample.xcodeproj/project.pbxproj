@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20498C352ADDAEA60031AD8D /* Storable in Frameworks */ = {isa = PBXBuildFile; productRef = 20498C342ADDAEA60031AD8D /* Storable */; };
 		20AF68122ADD952A00580338 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20AF68112ADD952A00580338 /* AppDelegate.swift */; };
 		20AF68142ADD952A00580338 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20AF68132ADD952A00580338 /* SceneDelegate.swift */; };
 		20AF681B2ADD952B00580338 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20AF681A2ADD952B00580338 /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20498C352ADDAEA60031AD8D /* Storable in Frameworks */,
 				20AF68272ADD953E00580338 /* Storable in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +154,7 @@
 			name = StorableExample;
 			packageProductDependencies = (
 				20AF68262ADD953E00580338 /* Storable */,
+				20498C342ADDAEA60031AD8D /* Storable */,
 			);
 			productName = StorableExample;
 			productReference = 20AF680E2ADD952A00580338 /* StorableExample.app */;
@@ -182,7 +185,7 @@
 			);
 			mainGroup = 20AF68052ADD952A00580338;
 			packageReferences = (
-				20AF68252ADD953E00580338 /* XCLocalSwiftPackageReference "../../Package" */,
+				20498C332ADDAEA60031AD8D /* XCLocalSwiftPackageReference "../.." */,
 			);
 			productRefGroup = 20AF680F2ADD952A00580338 /* Products */;
 			projectDirPath = "";
@@ -431,13 +434,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		20AF68252ADD953E00580338 /* XCLocalSwiftPackageReference "../../Package" */ = {
+		20498C332ADDAEA60031AD8D /* XCLocalSwiftPackageReference "../.." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Package;
+			relativePath = ../..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		20498C342ADDAEA60031AD8D /* Storable */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Storable;
+		};
 		20AF68262ADD953E00580338 /* Storable */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Storable;
