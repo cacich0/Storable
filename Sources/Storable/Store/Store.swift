@@ -4,13 +4,16 @@ import Foundation
 
 public typealias StoreOf<R: Reducer> = Store<R.State, R.Action>
 
-public class Store<State, Action>: ObservableObject {
+public class Store<State, Action>: ObservableObject where Action: Equatable {
     
     @usableFromInline
     @Published var state: State
     
     @usableFromInline
     let reducer: any Reducer<State, Action>
+    
+    @usableFromInline
+    var timers: [Timer: Action] = [:]
     
     private var cancellables: [AnyCancellable] = []
     
@@ -43,15 +46,29 @@ public class Store<State, Action>: ObservableObject {
                     }
                 )
             }
+        case let .timerStop(action):
+            Task {
+                guard let index = timers.firstIndex(where: { $0.value == action }) else { return }
+                timers[index].key.invalidate()
+                timers.remove(at: index)
+            }
+        case let .timerStart(interval, action):
+                let timer = Timer.scheduledTimer(
+                    withTimeInterval: interval,
+                    repeats: true) { timer in
+                        self.send(action)
+                    }
+                timers[timer] = action
         }
     }
     
     public func bind<T>(
         to keyPath: KeyPath<State, T>,
         closure: @escaping (T) -> Void
-    ) {
+    ) where T: Equatable {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: closure)
             .store(in: &cancellables)
@@ -69,6 +86,7 @@ extension Store {
     ) {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { label.text = $0 }
             .store(in: &cancellables)
@@ -80,6 +98,7 @@ extension Store {
     ) {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { textField.text = $0 }
             .store(in: &cancellables)
@@ -91,6 +110,7 @@ extension Store {
     ) {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { textField.isEnabled = $0 }
             .store(in: &cancellables)
@@ -102,6 +122,7 @@ extension Store {
     ) {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { button.setTitle($0, for: .normal)}
             .store(in: &cancellables)
@@ -113,6 +134,7 @@ extension Store {
     ) {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { button.isEnabled = $0 }
             .store(in: &cancellables)
@@ -122,9 +144,10 @@ extension Store {
         to keyPath: KeyPath<State, B>,
         for bindable: T,
         value: ReferenceWritableKeyPath<T, B?>
-    ) {
+    ) where B: Equatable {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { bindable[keyPath: value] = $0 }
             .store(in: &cancellables)
@@ -134,9 +157,10 @@ extension Store {
         to keyPath: KeyPath<State, B>,
         for bindable: T,
         value: ReferenceWritableKeyPath<T, B>
-    ) {
+    ) where B: Equatable {
         $state
             .map { $0[keyPath: keyPath] }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { bindable[keyPath: value] = $0 }
             .store(in: &cancellables)

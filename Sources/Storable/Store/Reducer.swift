@@ -1,7 +1,7 @@
 import Foundation
 
 
-public protocol Reducer<State, Action> {
+public protocol Reducer<State, Action> where Action: Equatable {
     
     associatedtype State
     associatedtype Action

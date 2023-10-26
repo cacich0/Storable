@@ -7,6 +7,26 @@ public struct Effect<Action> {
     enum Operation {
         case none
         case task(TaskPriority? = nil, @Sendable (_ send: Send<Action>) async -> Void)
+        case timerStart(TimeInterval, for: Action)
+        case timerStop(for: Action)
+    }
+    
+    public enum Timer {
+        case start(Tick)
+        case stop
+        
+        public enum Tick {
+            case milliseconds(Int)
+            case seconds(Int)
+            
+            @usableFromInline
+            var timeInterval: TimeInterval {
+                switch self {
+                case let .milliseconds(int): TimeInterval(int / 1000)
+                case let .seconds(int): TimeInterval(int)
+                }
+            }
+        }
     }
     
     @usableFromInline
@@ -40,6 +60,19 @@ extension Effect {
                 await handler(error, send)
             }
         })
+    }
+    
+    @inlinable
+    static public func timer(
+        _ timer: Timer,
+        for action: Action
+    ) -> Self {
+        switch timer {
+        case .start(let tick):
+            return Self(operation: .timerStart(tick.timeInterval, for: action))
+        case .stop:
+            return Self(operation: .timerStop(for: action))
+        }
     }
 }
 
