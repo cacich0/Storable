@@ -6,6 +6,9 @@ public typealias StoreOf<R: Reducer> = Store<R.State, R.Action>
 
 public class Store<State, Action>: ObservableObject where Action: Equatable {
     
+    public typealias State = State
+    public typealias Action = Action
+    
     @usableFromInline
     @Published var state: State
     
